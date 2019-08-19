@@ -14,12 +14,24 @@ namespace ticomp
 
             System.IO.FileInfo fo = null;
 
-            bool verbous = false;
+            bool verbose = false;
 
-            //for (int i = 0; i < args.Length; i++)
-            //{
-            //    Console.WriteLine(string.Format("[INFO]: args[{0}] = {1};", i, args[i]));
-            //}
+            if (args.Length == 0)
+            {
+                Console.WriteLine("");
+                Console.WriteLine("[USAGE]: ticomp [options] inputfile.md > outputfile.md");
+                Console.WriteLine("          or");
+                Console.WriteLine("         ticomp [options] inputfile.md -out=\"outputfile.md\"");
+                Console.WriteLine("");
+                Console.WriteLine("[options]:");
+                Console.WriteLine("           -ie=code - set input file codepage number");
+                Console.WriteLine("           -oe=code - set output file codepage number");
+                Console.WriteLine("           -out=\"output file path\" - set output file path");
+                Console.WriteLine("           -verb - verbose mode on (please, do not use in pipeline mode)");
+                Console.WriteLine("");
+
+                return;
+            }
 
             for (int i = 0; i < args.Length; i++)
             { 
@@ -83,9 +95,8 @@ namespace ticomp
                     }
                     if (key.StartsWith("verb"))
                     {
-                        verbous = true;                        
+                        verbose = true;                        
                     }
-
                 }
             }
 
@@ -93,7 +104,7 @@ namespace ticomp
             {
                 Console.OutputEncoding = output_enc;
 
-                if (verbous)
+                if (verbose)
                 {
                     for (int i = 0; i < args.Length; i++)
                     {
