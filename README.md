@@ -4,18 +4,34 @@
 ## Использование
 
 ``` bash
-mono ticomp.exe mainDocument.md > resultDocument.md
+ticomp mainDocument.md > resultDocument.md
 ```
 
 Результирующее содержание файла выводится в консоль. Поэтому, используется переопределение потока вывода в файл ```> resultDocument.md``` для сохранения результата подстановок.
+
+### Дополнительные опции
+
+Есть возможность задать дополнительные параметры по кодировке документов и имени результирующего файла:
+
+``` bash
+ticomp [options] inputfile.md -out="outputfile.md"
+```
+где **[options]**:
+
+- -ie=code - set input file codepage number
+- -oe=code - set output file codepage number
+- -out=\"output file path\" - set output file path
+- -verb - verbose mode on (please, do not use in pipeline mode)
+
 
 ## Синтаксис метки
 
 На данный момент описание ссылки на содержимое другого файла делается так:
 
 ```
-Основной текст документа, основной текст документа, основной текст документа
+Основной текст документа, основной текст документа, основной текст документа...
 
 {ticomp|include = C:\work\alice\additionalData.txt }
 
 Продолжение документа, продолжение документа, продолжение документа.
+```

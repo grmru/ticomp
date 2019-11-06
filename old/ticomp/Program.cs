@@ -19,9 +19,9 @@ namespace ticomp
             if (args.Length == 0)
             {
                 Console.WriteLine("");
-                Console.WriteLine("[USAGE]: ticomp [options] inputfile.md > outputfile.md");
-                Console.WriteLine("          or");
-                Console.WriteLine("         ticomp [options] inputfile.md -out=\"outputfile.md\"");
+                Console.WriteLine("USAGE: ticomp [options] inputfile.md > outputfile.md");
+                Console.WriteLine("        or");
+                Console.WriteLine("       ticomp [options] inputfile.md -out=\"outputfile.md\"");
                 Console.WriteLine("");
                 Console.WriteLine("[options]:");
                 Console.WriteLine("           -ie=code - set input file codepage number");
