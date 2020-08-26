@@ -192,7 +192,7 @@ namespace ticomp
                                         LastRefNumber++;
                                     }
 
-                                    splitted_line[i] = RefNumbers[refKey];
+                                    splitted_line[i] = RefNumbers[refKey].ToString();
                                     hasWorked = true;
                                 }
                             }
