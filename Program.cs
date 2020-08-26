@@ -19,6 +19,8 @@ namespace ticomp
             if (args.Length == 0)
             {
                 Console.WriteLine("");
+                Console.WriteLine("TiComp. Text compilation. Copyright (C) 2018 - 2020 George A. Tsyrkov");
+                Console.WriteLine("");
                 Console.WriteLine("USAGE: ticomp [options] inputfile.md > outputfile.md");
                 Console.WriteLine("        or");
                 Console.WriteLine("       ticomp [options] inputfile.md -out=\"outputfile.md\"");
@@ -27,7 +29,7 @@ namespace ticomp
                 Console.WriteLine("           -ie=code - set input file codepage number");
                 Console.WriteLine("           -oe=code - set output file codepage number");
                 Console.WriteLine("           -out=\"output file path\" - set output file path");
-                Console.WriteLine("           -verb - verbose mode on (please, do not use in pipeline mode)");
+                Console.WriteLine("           -verb - verbose mode on (please, do not use it in pipeline mode)");
                 Console.WriteLine("");
 
                 return;
@@ -159,6 +161,9 @@ namespace ticomp
 
             List<string> lines = new List<string>(System.IO.File.ReadAllLines(fi.FullName, input_enc));
 
+            Dictionary<string, int> RefNumbers = new Dictionary<string, int>();
+            int LastRefNumber = 1;
+
             for (int l = 0; l < lines.Count; l++)
             {
                 if (lines[l].Contains("{ticomp"))
@@ -170,7 +175,32 @@ namespace ticomp
                         if (inside)
                         {
                             bool hasWorked = false;
+
+                            // - Reference numbers in file
+                            //
+                            // mask "{ticomp|ref = mainPicture}"
+                            //
+                            if (splitted_line[i].Contains("ticomp|ref"))
+                            {
+                                if (splitted_line[i].Contains("="))
+                                {
+                                    string[] cmd = splitted_line[i].Split('=');
+                                    string refKey = cmd[1].Trim();
+                                    if (!RefNumbers.ContainsKey(refKey))
+                                    {
+                                        RefNumbers.Add(refKey, LastRefNumber);
+                                        LastRefNumber++;
+                                    }
+
+                                    splitted_line[i] = RefNumbers[refKey];
+                                    hasWorked = true;
+                                }
+                            }
+                            
+                            // - Including external file
+                            //
                             // mask "{ticomp|include = C:\demo\someFileToInclude}"
+                            //
                             if (splitted_line[i].Contains("ticomp|include"))
                             {
                                 List<string> newLine = new List<string>();
@@ -195,7 +225,6 @@ namespace ticomp
                                 }
 
                                 splitted_line[i] = result;
-
                                 hasWorked = true;
                             }
 
