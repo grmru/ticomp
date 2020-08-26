@@ -1,4 +1,5 @@
 # ticomp
+
 Очередная небольшая утилита для склейки содержимого файлов. Может упростить компоновку большого документа позволяя ссылаться на содержимое в других файлах.
 
 ## Использование
@@ -21,7 +22,7 @@ ticomp [options] inputfile.md -out="outputfile.md"
 - -ie=code - set input file codepage number
 - -oe=code - set output file codepage number
 - -out=\"output file path\" - set output file path
-- -verb - verbose mode on (please, do not use in pipeline mode)
+- -verb - verbose mode on (please, do not use it in pipeline mode)
 
 
 ## Синтаксис метки
@@ -34,4 +35,14 @@ ticomp [options] inputfile.md -out="outputfile.md"
 {ticomp|include = C:\work\alice\additionalData.txt }
 
 Продолжение документа, продолжение документа, продолжение документа.
+```
+
+### Номерные ссылки
+
+Утилита позволяет проставить автоматическую нумерацию ссылок в тексте, например для рисунков и таблиц.
+
+```
+Очень правильное и полезное описание какой-то мега-крутой штуки, но более детальное представление можно посмотреть на рисунке {ticomp|ref = picture-details}. Это подтверждает то что мега-штука все еще крутая.
+
+![Рисунок {ticomp|ref = picture-details} - А это подпись к рисунку, после которого все стало понятно](https://tias.pro/logo-white.svg)
 ```
