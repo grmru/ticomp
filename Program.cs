@@ -276,7 +276,21 @@ namespace ticomp
                                 {
                                     string[] cmd = splitted_line[i].Split('=');
 
-                                    newLine = CompileDocument(cmd[1].Trim(), input_enc, ref refData);
+                                    string filePoint = cmd[1].Trim();
+                                    System.IO.FileInfo sub_fi = null;                                    
+
+                                    sub_fi = new System.IO.FileInfo(filePoint);
+
+                                    if (sub_fi == null || (sub_fi != null && !sub_fi.Exists))
+                                    {
+                                        string relativeFilePoint = fi.DirectoryName + System.IO.Path.DirectorySeparatorChar + filePoint;
+                                        sub_fi = new System.IO.FileInfo(relativeFilePoint);
+                                    }
+
+                                    if (sub_fi != null && sub_fi.Exists)
+                                    {
+                                        newLine = CompileDocument(sub_fi.FullName, input_enc, ref refData);
+                                    }
                                 }
 
                                 string result = string.Empty;
