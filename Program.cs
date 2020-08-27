@@ -143,9 +143,9 @@ namespace ticomp
                 Console.WriteLine("[ERROR]: не получилось считать файл " + fi != null ? fi.FullName : "null");
             }
 
-#if DEBUG
-            Console.ReadKey();
-#endif
+//#if DEBUG
+//            Console.ReadKey();
+//#endif
         }
 
         public static List<string> CompileDocument(string filePath, System.Text.Encoding input_enc)
