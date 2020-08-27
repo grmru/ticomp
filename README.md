@@ -19,10 +19,10 @@ ticomp [options] inputfile.md -out="outputfile.md"
 ```
 где **[options]**:
 
-- -ie=code - set input file codepage number
-- -oe=code - set output file codepage number
-- -out=\"output file path\" - set output file path
-- -verb - verbose mode on (please, do not use it in pipeline mode)
+- -ie=code - set input file codepage number;
+- -oe=code - set output file codepage number;
+- -out=\"output file path\" - set output file path;
+- -verb - verbose mode on (please, do not use it in pipeline mode).
 
 
 ## Синтаксис метки
@@ -39,10 +39,17 @@ ticomp [options] inputfile.md -out="outputfile.md"
 
 ### Номерные ссылки
 
-Утилита позволяет проставить автоматическую нумерацию ссылок в тексте, например для рисунков и таблиц.
+Утилита позволяет проставить автоматическую нумерацию ссылок в тексте, например для рисунков, таблиц или формул.
 
-```
-Очень правильное и полезное описание какой-то мега-крутой штуки, но более детальное представление можно посмотреть на рисунке {ticomp|ref = picture-details}. Это подтверждает то что мега-штука все еще крутая.
+``` markdown
+Очень правильное и полезное описание какой-то мега-крутой штуки, но более детальное представление можно посмотреть на рисунке {ticomp|ref-picture = picture-details}. Это подтверждает то что мега-штука все еще крутая.
 
-![Рисунок {ticomp|ref = picture-details} - А это подпись к рисунку, после которого все стало понятно](https://tias.pro/logo-white.svg)
+![Рисунок {ticomp|ref-picture = picture-details} - А это подпись к рисунку, после которого все стало понятно](https://tias.pro/logo-white.svg)
 ```
+
+На данный момент поддерживается четыре области независимых счетчиков:
+
+- для картинок или иллюстраций _ref-picture_;
+- для таблиц _ref-table_;
+- для формул _ref-formula_;
+- для списков или различных листингов _ref-list_.

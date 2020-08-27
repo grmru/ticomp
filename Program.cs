@@ -7,6 +7,8 @@ namespace ticomp
     {
         public static void Main(string[] args)
         {
+            RefData refData = new RefData();
+
             System.IO.FileInfo fi = null;
 
             System.Text.Encoding input_enc = System.Text.Encoding.Default;
@@ -124,7 +126,7 @@ namespace ticomp
                     }
                 }
 
-                List<string> compiled_lines = CompileDocument(fi.FullName, input_enc);
+                List<string> compiled_lines = CompileDocument(fi.FullName, input_enc, ref refData);
 
                 if (fo != null)
                 {
@@ -142,13 +144,9 @@ namespace ticomp
             {
                 Console.WriteLine("[ERROR]: не получилось считать файл " + fi != null ? fi.FullName : "null");
             }
-
-//#if DEBUG
-//            Console.ReadKey();
-//#endif
         }
 
-        public static List<string> CompileDocument(string filePath, System.Text.Encoding input_enc)
+        public static List<string> CompileDocument(string filePath, System.Text.Encoding input_enc, ref RefData refData)
         {
             List<string> ret = new List<string>();
 
@@ -160,9 +158,6 @@ namespace ticomp
             }
 
             List<string> lines = new List<string>(System.IO.File.ReadAllLines(fi.FullName, input_enc));
-
-            Dictionary<string, int> RefNumbers = new Dictionary<string, int>();
-            int LastRefNumber = 1;
 
             for (int l = 0; l < lines.Count; l++)
             {
@@ -176,26 +171,98 @@ namespace ticomp
                         {
                             bool hasWorked = false;
 
-                            // - Reference numbers in file
+                            // - Picture reference numbers in file
                             //
-                            // mask "{ticomp|ref = mainPicture}"
+                            // mask "{ticomp|ref-picture = mainPicture}"
                             //
-                            if (splitted_line[i].Contains("ticomp|ref"))
+                            #region ticomp|ref-picture
+                            if (splitted_line[i].Contains("ticomp|ref-picture"))
                             {
                                 if (splitted_line[i].Contains("="))
                                 {
                                     string[] cmd = splitted_line[i].Split('=');
                                     string refKey = cmd[1].Trim();
-                                    if (!RefNumbers.ContainsKey(refKey))
+                                    if (!refData.RefPictureNumbers.ContainsKey(refKey))
                                     {
-                                        RefNumbers.Add(refKey, LastRefNumber);
-                                        LastRefNumber++;
+                                        refData.RefPictureNumbers.Add(refKey, refData.LastRefPictureNumber);
+                                        refData.LastRefPictureNumber++;
                                     }
 
-                                    splitted_line[i] = RefNumbers[refKey].ToString();
+                                    splitted_line[i] = refData.RefPictureNumbers[refKey].ToString();
                                     hasWorked = true;
                                 }
                             }
+                            #endregion
+
+                            // - Table reference numbers in file
+                            //
+                            // mask "{ticomp|ref-table = mainTable}"
+                            //
+                            #region ticomp|ref-table
+                            if (splitted_line[i].Contains("ticomp|ref-table"))
+                            {
+                                if (splitted_line[i].Contains("="))
+                                {
+                                    string[] cmd = splitted_line[i].Split('=');
+                                    string refKey = cmd[1].Trim();
+                                    if (!refData.RefTableNumbers.ContainsKey(refKey))
+                                    {
+                                        refData.RefTableNumbers.Add(refKey, refData.LastRefTableNumber);
+                                        refData.LastRefTableNumber++;
+                                    }
+
+                                    splitted_line[i] = refData.RefTableNumbers[refKey].ToString();
+                                    hasWorked = true;
+                                }
+                            }
+                            #endregion
+
+                            // - Formula reference numbers in file
+                            //
+                            // mask "{ticomp|ref-formula = mainFormula}"
+                            //
+                            #region ticomp|ref-formula
+                            if (splitted_line[i].Contains("ticomp|ref-formula"))
+                            {
+                                if (splitted_line[i].Contains("="))
+                                {
+                                    string[] cmd = splitted_line[i].Split('=');
+                                    string refKey = cmd[1].Trim();
+                                    if (!refData.RefFormulaNumbers.ContainsKey(refKey))
+                                    {
+                                        refData.RefFormulaNumbers.Add(refKey, refData.LastRefFormulaNumber);
+                                        refData.LastRefFormulaNumber++;
+                                    }
+
+                                    splitted_line[i] = refData.RefFormulaNumbers[refKey].ToString();
+                                    hasWorked = true;
+                                }
+                            }
+                            #endregion
+
+                            // - List reference numbers in file
+                            //
+                            // mask "{ticomp|ref-list = mainList}"
+                            //
+                            #region ticomp|ref-list
+                            if (splitted_line[i].Contains("ticomp|ref-list"))
+                            {
+                                if (splitted_line[i].Contains("="))
+                                {
+                                    string[] cmd = splitted_line[i].Split('=');
+                                    string refKey = cmd[1].Trim();
+                                    if (!refData.RefListNumbers.ContainsKey(refKey))
+                                    {
+                                        refData.RefListNumbers.Add(refKey, refData.LastRefListNumber);
+                                        refData.LastRefListNumber++;
+                                    }
+
+                                    splitted_line[i] = refData.RefListNumbers[refKey].ToString();
+                                    hasWorked = true;
+                                }
+                            }
+                            #endregion
+                            
                             
                             // - Including external file
                             //
@@ -209,7 +276,7 @@ namespace ticomp
                                 {
                                     string[] cmd = splitted_line[i].Split('=');
 
-                                    newLine = CompileDocument(cmd[1].Trim(), input_enc);
+                                    newLine = CompileDocument(cmd[1].Trim(), input_enc, ref refData);
                                 }
 
                                 string result = string.Empty;
